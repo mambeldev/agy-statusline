@@ -7,7 +7,7 @@ Barra de estado personalizada (*custom statusline*) para **Antigravity CLI (`agy
 ## Vista previa
 
 ```text
- ● active agy-statusline (main)                    [Day: 14.5% | Week: 42.0% | Month: 31.2%]  [Gemini 2.5 Pro] 
+ ● active agy-statusline (main)                    [Day: 14.5% | Week: 42.0% | Month: 9.7%]  [Gemini 2.5 Pro] 
 ```
 
 ### Diseño adaptativo (Responsive)
@@ -16,10 +16,10 @@ El script mide automáticamente el ancho de tu terminal y adapta la vista para e
 
 | Ancho de terminal | Formato mostrado |
 | :--- | :--- |
-| **>= 95 columnas** | `● active carpeta (rama)          [Day: 14.5% | Week: 42.0% | Month: 31.2%]  [Modelo]` |
-| **< 95 columnas** | `● active carpeta (rama)          [D: 14.5% | W: 42.0% | M: 31.2%]  [Modelo]` |
-| **Compacto** | `● active                         [D: 14.5% | W: 42.0% | M: 31.2%]  [Modelo]` |
-| **Mínimo** | `● active                         [14.5%|42.0%|31.2%] [Modelo]` |
+| **>= 95 columnas** | `● active carpeta (rama)          [Day: 14.5% | Week: 42.0% | Month: 9.7%]  [Modelo]` |
+| **< 95 columnas** | `● active carpeta (rama)          [D: 14.5% | W: 42.0% | M: 9.7%]  [Modelo]` |
+| **Compacto** | `● active                         [D: 14.5% | W: 42.0% | M: 9.7%]  [Modelo]` |
+| **Mínimo** | `● active                         [14.5%|42.0%|9.7%] [Modelo]` |
 
 ### Código de colores por consumo
 
@@ -33,92 +33,58 @@ El script mide automáticamente el ancho de tu terminal y adapta la vista para e
 ## Requisitos
 
 * **Antigravity CLI (`agy`)** instalado.
-* **Python 3.10+** (solo utiliza la librería estándar, sin dependencias externas).
+* **Python 3.7+** (funciona de fábrica con el Python 3.9 incluido en **macOS** y cualquier distribución **Linux**, sin instalar paquetes ni dependencias externas).
 
 ---
 
-## Instalación rápida con IA
+## Instalación en 1 comando
 
-Si estás usando **Antigravity (`agy`)** o cualquier otro agente de IA en tu terminal, clona este repositorio y pídele al agente:
-
-> *"Lee el archivo `AGENTS.md` e instala este statusline para agy."*
-
-El archivo [`AGENTS.md`](./AGENTS.md) contiene las instrucciones paso a paso para que la IA realice la copia, configure `settings.json` sin sobrescribir tus ajustes actuales y verifique que funciona.
-
----
-
-## Instalación manual
-
-### 1. Copiar el script y darle permisos de ejecución
-
-Clona el repositorio y copia `statusline.py` al directorio de configuración de Antigravity CLI:
+Coloca `statusline.py` en cualquier carpeta (o clona este repositorio) y ejecuta:
 
 ```bash
-mkdir -p ~/.gemini/antigravity-cli
-cp statusline.py ~/.gemini/antigravity-cli/statusline.py
-chmod +x ~/.gemini/antigravity-cli/statusline.py
+python3 statusline.py --install
 ```
 
-### 2. Activar el statusline en `agy`
+Este comando:
+1. Copia el script a `~/.gemini/antigravity-cli/statusline.py` y le asigna permisos de ejecución (`chmod +x`).
+2. Actualiza `~/.gemini/antigravity-cli/settings.json` conservando intactas todas tus demás configuraciones.
+3. Muestra una vista previa en tu terminal para confirmar que funciona.
 
-Tienes dos formas de activarlo:
+### Otras opciones del script
 
-#### Opción A: Desde dentro de `agy` (comando slash)
-
-Abre `agy` y ejecuta:
-
-```text
-/statusline ~/.gemini/antigravity-cli/statusline.py
-```
-
-#### Opción B: Editando `settings.json`
-
-Abre (o crea) el archivo `~/.gemini/antigravity-cli/settings.json` y añade el bloque `statusLine`:
-
-```json
-{
-  "statusLine": {
-    "type": "command",
-    "command": "~/.gemini/antigravity-cli/statusline.py",
-    "enabled": true,
-    "padding": 0,
-    "stack_with_default": false
-  }
-}
-```
-
-> **Nota:** Si quieres conservar la barra de estado por defecto de `agy` y mostrar esta debajo, cambia `"stack_with_default": true`.
+* **Instalar sin mover el archivo (usarlo desde donde lo colocaste):**
+  ```bash
+  python3 statusline.py --install-here
+  ```
+* **Probar cómo se ve la barra en tu terminal actual:**
+  ```bash
+  python3 statusline.py --test
+  ```
+* **Desinstalar y restaurar la barra original de `agy`:**
+  ```bash
+  python3 statusline.py --uninstall
+  ```
 
 ---
 
-## Cómo usarlo y comandos útiles
+## Instalación con IA
 
-Una vez configurado, `agy` ejecutará el script automáticamente cada vez que cambie el estado de la sesión.
+Si estás usando **Antigravity (`agy`)**, Claude Code o Cursor, pídele al agente:
 
-Dentro de `agy` puedes controlar la barra de estado en cualquier momento con los siguientes comandos:
+> *"Instala este statusline para agy."*
+
+El archivo [`AGENTS.md`](./AGENTS.md) guía al agente para ejecutar `python3 ./statusline.py --install` en un solo paso.
+
+---
+
+## Comandos útiles dentro de `agy`
+
+Una vez instalado, `agy` ejecutará el script automáticamente en cada actualización de estado. También puedes controlarlo desde dentro de `agy` con:
 
 * `/statusline` — Alterna entre activar y desactivar la barra personalizada.
 * `/statusline on` — Activa la barra personalizada.
 * `/statusline off` — Desactiva temporalmente la barra personalizada y vuelve a la predeterminada.
 * `/statusline reset` — Elimina la configuración personalizada y restaura la barra original de `agy`.
-
-### Probar el script manualmente desde la terminal
-
-Puedes verificar cómo se ve la salida simulando el payload JSON que envía `agy`:
-
-```bash
-echo '{
-  "terminal_width": 110,
-  "agent_state": "active",
-  "cwd": "/Users/demo/agy-statusline",
-  "vcs": {"branch": "main"},
-  "model": {"display_name": "Gemini 2.5 Pro"},
-  "quota": {
-    "gemini-5h": {"remaining_fraction": 0.855},
-    "gemini-weekly": {"remaining_fraction": 0.58, "reset_time": "2026-11-30T00:00:00Z"}
-  }
-}' | python3 ~/.gemini/antigravity-cli/statusline.py && echo ""
-```
 
 ---
 
